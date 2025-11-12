@@ -2,6 +2,7 @@ import http from "http";
 import { WebSocketServer } from "ws";
 
 const PORT = process.env.PORT || 10000;
+
 const server = http.createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" });
   res.end("✅ PCM Relay Server Active");
@@ -11,9 +12,7 @@ const wss = new WebSocketServer({ server, path: "/stream" });
 const rooms = new Map();
 
 function getRoom(id) {
-  if (!rooms.has(id)) {
-    rooms.set(id, { sender: null, receivers: new Set() });
-  }
+  if (!rooms.has(id)) rooms.set(id, { sender: null, receivers: new Set() });
   return rooms.get(id);
 }
 
@@ -46,5 +45,5 @@ wss.on("connection", (ws, req) => {
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ Relay running on Render (PORT ${PORT})`);
+  console.log(`✅ Relay running on Railway PORT ${PORT}`);
 });
