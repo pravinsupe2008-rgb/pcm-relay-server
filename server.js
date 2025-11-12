@@ -1,7 +1,7 @@
 import http from "http";
 import { WebSocketServer } from "ws";
 
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 8080;
 
 const server = http.createServer((req, res) => {
   res.writeHead(200, { "Content-Type": "text/plain" });
@@ -44,6 +44,4 @@ wss.on("connection", (ws, req) => {
   });
 });
 
-server.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ Relay running on Railway PORT ${PORT}`);
-});
+server.listen(PORT, () => console.log(`✅ Replit relay running on ${PORT}`));
