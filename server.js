@@ -1,7 +1,9 @@
-import { WebSocketServer } from "ws";
 import http from "http";
+import { WebSocketServer } from "ws";
 
+const PORT = process.env.PORT || 10000; // Render का assigned port use करो
 const server = http.createServer();
+
 const wss = new WebSocketServer({ server, path: "/stream" });
 
 const rooms = new Map();
@@ -14,17 +16,17 @@ function getRoom(id) {
 }
 
 wss.on("connection", (ws, req) => {
-  const url = new URL(req.url, "http://dummy/");
+  const url = new URL(req.url, "http://localhost/");
   const room = url.searchParams.get("room") || "default";
   const role = url.searchParams.get("role") || "receiver";
   const r = getRoom(room);
 
   if (role === "sender") {
     r.sender = ws;
-    console.log(`Sender connected → Room: ${room}`);
+    console.log(`🎤 Sender connected → Room: ${room}`);
   } else {
     r.receivers.add(ws);
-    console.log(`Receiver connected → Room: ${room}`);
+    console.log(`🎧 Receiver connected → Room: ${room}`);
   }
 
   ws.on("message", (data, isBinary) => {
@@ -38,9 +40,10 @@ wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     if (role === "sender") r.sender = null;
     else r.receivers.delete(ws);
+    console.log(`❌ ${role} left → Room: ${room}`);
   });
 });
 
-server.listen(process.env.PORT || 3001, () =>
-  console.log("✅ Render relay running on port", process.env.PORT || 3001)
-);
+server.listen(PORT, () => {
+  console.log(`✅ Relay running on Render (PORT ${PORT})`);
+});
