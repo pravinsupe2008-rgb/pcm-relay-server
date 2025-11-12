@@ -7,9 +7,9 @@
     "ws": "^8.13.0"
   },
   "scripts": {
-  "build": "npm install --omit=dev",
-  "start": "node server.js"
-},
+    "postinstall": "npm install --omit=dev",
+    "start": "node server.js"
+  },
   "engines": {
     "node": ">=18.0.0"
   }
