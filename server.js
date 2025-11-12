@@ -1,8 +1,13 @@
 import http from "http";
 import { WebSocketServer } from "ws";
 
-const PORT = process.env.PORT || 10000; // Render का assigned port use करो
-const server = http.createServer();
+const PORT = process.env.PORT || 10000;
+
+const server = http.createServer((req, res) => {
+  // This route proves to Render that port is open
+  res.writeHead(200, { "Content-Type": "text/plain" });
+  res.end("✅ PCM Relay Server Active");
+});
 
 const wss = new WebSocketServer({ server, path: "/stream" });
 
@@ -44,6 +49,6 @@ wss.on("connection", (ws, req) => {
   });
 });
 
-server.listen(PORT, () => {
-  console.log(`✅ Relay running on Render (PORT ${PORT})`);
+server.listen(PORT, "0.0.0.0", () => {
+  console.log(`✅ Render relay running at PORT ${PORT}`);
 });
