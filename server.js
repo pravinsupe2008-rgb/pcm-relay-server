@@ -2,15 +2,12 @@ import http from "http";
 import { WebSocketServer } from "ws";
 
 const PORT = process.env.PORT || 10000;
-
 const server = http.createServer((req, res) => {
-  // This route proves to Render that port is open
   res.writeHead(200, { "Content-Type": "text/plain" });
   res.end("✅ PCM Relay Server Active");
 });
 
 const wss = new WebSocketServer({ server, path: "/stream" });
-
 const rooms = new Map();
 
 function getRoom(id) {
@@ -45,10 +42,9 @@ wss.on("connection", (ws, req) => {
   ws.on("close", () => {
     if (role === "sender") r.sender = null;
     else r.receivers.delete(ws);
-    console.log(`❌ ${role} left → Room: ${room}`);
   });
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`✅ Render relay running at PORT ${PORT}`);
+  console.log(`✅ Relay running on Render (PORT ${PORT})`);
 });
